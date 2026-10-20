@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify required files
+        run: |
+          test -f public/index.html
+          test -f public/styles.css
+          test -f public/app.js
+          test -f server.py
+          echo "All core files present"
+
+      - name: Basic HTML check
+        run: |
+          grep -q "StoreSignal" public/index.html
+          grep -q "animate" public/styles.css
+          echo "Content checks passed"
+
+      - name: Python syntax check
+        run: python3 -m py_compile server.py
